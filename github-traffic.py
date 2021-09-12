@@ -5,6 +5,7 @@ from decouple import config
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from prometheus_client import start_http_server, Gauge
+from logfmt_logger import getLogger
 
 ORG_NAME = config("ORG_NAME")
 REPO_TYPE = config("REPO_TYPE", default="public")
@@ -13,6 +14,8 @@ CRONTAB_SCHEDULE = config("CRONTAB_SCHEDULE", default="0 * * * *")
 GITHUB_TOKEN = config('GITHUB_TOKEN')
 
 github = Github(GITHUB_TOKEN)
+
+logger = getLogger("github_traffic")
 
 gh_traffic_views = Gauge(
     "github_traffic_views",
@@ -63,30 +66,39 @@ def job_function():
     for repo in repositories:
         if REPO_NAME_CONTAINS in repo.name:
             repo_name = repo.name
-            print(repo.name)
+            toShow = dict()
+            toShow['repo'] = repo_name
 
             try:
                 # Views stats
                 data_views = repo.get_views_traffic(per="day")
-                print(data_views["views"][-1].count)
                 gh_traffic_views.labels(repo_name).set(data_views["views"][-1].count)
-                print(data_views["views"][-1].uniques)
                 gh_traffic_unique_views.labels(repo_name).set(data_views["views"][-1].uniques)
-
+                toShow['views'] = data_views["views"][-1].count
+                toShow['unique_views'] = data_views["views"][-1].uniques
+            except Exception as e:
+                logger.error(f"Failed to extract views on {repo_name}: {e}")
+            try:
                 # Clones stats
                 data_clones = repo.get_clones_traffic(per="day")
-                print(data_clones["clones"][-1].count)
                 gh_traffic_clones.labels(repo_name).set(data_clones["clones"][-1].count)
-                print(data_clones["clones"][-1].uniques)
                 gh_traffic_unique_clones.labels(repo_name).set(data_clones["clones"][-1].uniques)
-
+                toShow['clones'] = data_clones["clones"][-1].count
+                toShow['unique_clones'] = data_clones["clones"][-1].uniques
+            except Exception as e:
+                logger.error(f"Failed to extract clones on {repo_name}: {e}")
+            try:
                 # Star stats
                 gh_traffic_stars.labels(repo_name).set(repo.stargazers_count)
+                toShow['stars'] = repo.stargazers_count
             except Exception as e:
-                print(f"Failed to extract stats on {repo_name}: {e}")
+                logger.error(f"Failed to get stars on {repo_name}: {e}")
+            
+            logger.info('Gather insights', extra={"context": toShow})
 
 
 if __name__ == "__main__":
+    logger.info('Github traffic is running!')
     # Start up the server to expose the metrics.
     start_http_server(8001)
     # Schedule run the job on startup.
