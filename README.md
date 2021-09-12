@@ -25,6 +25,10 @@ CRONTAB_SCHEDULE=crontab-schedule-to-get-data-from-github # Default: "0 * * * *"
 Run the image:
 ```
 $ docker run --env-file .env -it -p 8001:8001 ghcr.io/grafana/github-traffic
+level=INFO msg="Github traffic is running!" 
+level=INFO msg="Gather insights" repo="k6" views=163 unique_views=90 clones=406 unique_clones=109 stars=13805
+level=INFO msg="Gather insights" repo="postman-to-k6" views=3 unique_views=2 clones=1 unique_clones=1 stars=238
+level=INFO msg="Gather insights" repo="jmeter-to-k6" views=1 unique_views=1 clones=2 unique_clones=2 stars=44
 ...
 Go to http://localhost:8001/metrics
 ```
