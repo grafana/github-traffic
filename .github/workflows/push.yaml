@@ -2,8 +2,9 @@
 name: "push"
 
 on:
-  push:
-    branches: [ main ]
+  release:
+    types:
+      - published
 
 jobs:
   build:
@@ -29,4 +30,4 @@ jobs:
           context: .
           push: true
           file: Dockerfile
-          tags: ghcr.io/grafana/github-traffic:latest,ghcr.io/grafana/github-traffic:${{ github.sha }}
+          tags: ghcr.io/grafana/github-traffic:latest,ghcr.io/grafana/github-traffic:${{ github.event.release.tag_name }}
