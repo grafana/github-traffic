@@ -30,4 +30,4 @@ jobs:
           context: .
           push: true
           file: Dockerfile
-          tags: ghcr.io/y0ngg4n/github-traffic:latest,ghcr.io/y0ngg4n/github-traffic:${{ github.event.release.tag_name }}
+          tags: ghcr.io/grafana/github-traffic:latest,ghcr.io/grafana/github-traffic:${{ github.event.release.tag_name }}
