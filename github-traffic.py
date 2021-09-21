@@ -7,8 +7,8 @@ from apscheduler.triggers.cron import CronTrigger
 from prometheus_client import start_http_server, Gauge
 from logfmt_logger import getLogger
 
-ORG_NAME = config("ORG_NAME")
-USER_NAME = config("USER_NAME")
+ORG_NAME = config("ORG_NAME", default="")
+USER_NAME = config("USER_NAME", default="")
 REPO_TYPE = config("REPO_TYPE", default="public")
 REPO_NAME_CONTAINS = config("REPO_NAME_CONTAINS", default="")
 CRONTAB_SCHEDULE = config("CRONTAB_SCHEDULE", default="0 * * * *")
