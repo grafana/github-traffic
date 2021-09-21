@@ -7,7 +7,8 @@ from apscheduler.triggers.cron import CronTrigger
 from prometheus_client import start_http_server, Gauge
 from logfmt_logger import getLogger
 
-ORG_NAME = config("ORG_NAME")
+ORG_NAME = config("ORG_NAME", default="")
+USER_NAME = config("USER_NAME", default="")
 REPO_TYPE = config("REPO_TYPE", default="public")
 REPO_NAME_CONTAINS = config("REPO_NAME_CONTAINS", default="")
 CRONTAB_SCHEDULE = config("CRONTAB_SCHEDULE", default="0 * * * *")
@@ -61,8 +62,12 @@ def job_function():
     api_limits = github.get_rate_limit().core
     gh_traffic_api_requests_limit.set(api_limits.limit)
     gh_traffic_api_requests_remaining.set(api_limits.remaining)
-
-    repositories = github.get_organization(ORG_NAME).get_repos(type=REPO_TYPE)
+    if(not ORG_NAME and not USER_NAME):
+        logger.error(f"Please fill ORG_NAME or USER_NAME in config")
+    if(ORG_NAME):
+        repositories = github.get_organization(ORG_NAME).get_repos(type=REPO_TYPE)
+    if(USER_NAME):
+        repositories = github.get_user(USER_NAME).get_repos(type=REPO_TYPE)
     for repo in repositories:
         if REPO_NAME_CONTAINS in repo.name:
             repo_name = repo.name
