@@ -1,0 +1,29 @@
+services:
+  grafana:
+    image: 'grafana/grafana-oss'
+    ports:
+      - "3000:3000"
+    links:
+      - prometheus
+    dns:
+      - 8.8.8.8
+  prometheus:
+    image: 'prom/prometheus'
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    command: 
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    ports:
+      - "9090:9090"
+    links:
+      - traffic
+  traffic:
+    image: 'ghcr.io/grafana/github-traffic'
+    ports: 
+      - "8001:8001"
+    env_file:
+      - .env
+    restart:
+      on-failure
+    dns:
+      - 8.8.8.8
