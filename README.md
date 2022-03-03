@@ -22,6 +22,8 @@ REPO_NAME_CONTAINS=string-to-match-repositories-with # Default: ""
 CRONTAB_SCHEDULE=crontab-schedule-to-get-data-from-github # Default: "0 * * * *"
 ```
 
+**_NOTE:_** You also can use your username if you don't belong to any organization. In this case, use "USERNAME" instead of "ORG_NAME".
+
 Run the image:
 ```
 $ docker run --env-file .env -it -p 8001:8001 ghcr.io/grafana/github-traffic
