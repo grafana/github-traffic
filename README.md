@@ -57,4 +57,16 @@ Now, you can access to:
 * Prometheus: http://localhost:9090
 * Github traffic:  http://localhost:8001
 
-Once you navigate to Grafana (http//localhost:3000), the user and password are admin/admin you have to configure a datasource to Prometheus (http://prometheus:9090) and import the dashboard with id 15000. 
+Once you navigate to Grafana (http://localhost:3000), the user and password are admin/admin you have to configure a datasource to Prometheus (http://prometheus:9090) and import the dashboard with id 15000. 
+
+Remove containers:
+```zsh
+❯ docker-compose down
+Stopping github-traffic_grafana_1    ... done
+Stopping github-traffic_prometheus_1 ... done
+Stopping github-traffic_traffic_1    ... done
+Removing github-traffic_grafana_1    ... done
+Removing github-traffic_prometheus_1 ... done
+Removing github-traffic_traffic_1    ... done
+Removing network github-traffic_default
+```
