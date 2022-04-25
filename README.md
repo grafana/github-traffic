@@ -22,6 +22,8 @@ REPO_NAME_CONTAINS=string-to-match-repositories-with # Default: ""
 CRONTAB_SCHEDULE=crontab-schedule-to-get-data-from-github # Default: "0 * * * *"
 ```
 
+**_NOTE:_** You also can use your username if you don't belong to any organization. In this case, use "USERNAME" instead of "ORG_NAME".
+
 Run the image:
 ```
 $ docker run --env-file .env -it -p 8001:8001 ghcr.io/grafana/github-traffic
@@ -36,3 +38,35 @@ Profit!
 
 Now you can collect those metrics as you would do with any other service. To visualize them, we provide an example/template Grafana dashboard: https://grafana.com/grafana/dashboards/15000
 
+## Docker compose
+In addition, a docker-compose.yaml file is provided. This file also run Prometheus and Grafana. 
+
+**_NOTE:_** You've to create the .env file with you configuration. 
+
+Run compose:
+```zsh
+❯ docker-compose up -d
+Creating network "github-traffic_default" with the default driver
+Creating github-traffic_traffic_1 ... done
+Creating github-traffic_prometheus_1 ... done
+Creating github-traffic_grafana_1    ... done
+```
+
+Now, you can access to:
+* Grafana: http://localhost:3000
+* Prometheus: http://localhost:9090
+* Github traffic:  http://localhost:8001
+
+Once you navigate to Grafana (http://localhost:3000), the user and password are admin/admin you have to configure a datasource to Prometheus (http://prometheus:9090) and import the dashboard with id 15000. 
+
+Remove containers:
+```zsh
+❯ docker-compose down
+Stopping github-traffic_grafana_1    ... done
+Stopping github-traffic_prometheus_1 ... done
+Stopping github-traffic_traffic_1    ... done
+Removing github-traffic_grafana_1    ... done
+Removing github-traffic_prometheus_1 ... done
+Removing github-traffic_traffic_1    ... done
+Removing network github-traffic_default
+```
