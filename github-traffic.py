@@ -42,6 +42,30 @@ gh_traffic_unique_clones = Gauge(
     ["repository"],
 )
 
+gh_traffic_top_paths = Gauge(
+    "github_traffic_top_paths",
+    "Number of visits to top paths",
+    ["repository", "path", "title"],
+)
+
+gh_traffic_top_unique_paths = Gauge(
+    "github_traffic_top_unique_paths",
+    "Number of unique visits to top paths",
+    ["repository", "path", "title"],
+)
+
+gh_traffic_top_referrers = Gauge(
+    "github_traffic_top_referrers",
+    "Number of visits from top referrers",
+    ["repository", "referrer"],
+)
+
+gh_traffic_top_unique_referrers = Gauge(
+    "github_traffic_top_unique_referrers",
+    "Number of unique visits from top referrers",
+    ["repository", "referrer"],
+)
+
 gh_traffic_stars = Gauge(
     "github_traffic_stars",
     "Number of stars",
@@ -98,7 +122,33 @@ def job_function():
                 toShow['stars'] = repo.stargazers_count
             except Exception as e:
                 logger.error(f"Failed to get stars on {repo_name}: {e}")
-            
+            try:
+                # Top Paths
+                total_count = 0
+                total_unique_count = 0
+                for path in repo.get_top_paths():
+                    gh_traffic_top_paths.labels(repo_name, path.path, path.title).set(path.count)
+                    total_count = total_count + path.count
+                    gh_traffic_top_unique_paths.labels(repo_name, path.path, path.title).set(path.uniques)
+                    total_unique_count = total_unique_count + path.uniques
+                toShow['sum(top_paths)'] = total_count
+                toShow['sum(top_unique_paths)'] = total_unique_count
+            except Exception as e:
+                logger.error(f"Failed to get top paths on {repo_name}: {e}")
+            try:
+                # Top Referrers
+                total_count = 0
+                total_unique_count = 0
+                for referrer in repo.get_top_referrers():
+                    gh_traffic_top_referrers.labels(repo_name, referrer.referrer).set(referrer.count)
+                    total_count = total_count + referrer.count
+                    gh_traffic_top_unique_referrers.labels(repo_name, referrer.referrer).set(referrer.uniques)
+                    total_unique_count = total_unique_count + referrer.uniques
+                toShow['sum(top_referrers)'] = total_count
+                toShow['sum(top_unique_referrers)'] = total_unique_count
+            except Exception as e:
+                logger.error(f"Failed to get top referrers on {repo_name}: {e}")
+
             logger.info('Gather insights', extra={"context": toShow})
 
 
