@@ -22,7 +22,7 @@ REPO_NAME_CONTAINS=string-to-match-repositories-with # Default: ""
 CRONTAB_SCHEDULE=crontab-schedule-to-get-data-from-github # Default: "0 * * * *"
 ```
 
-**_NOTE:_** You also can use your username if you don't belong to any organization. In this case, use "USERNAME" instead of "ORG_NAME".
+**_NOTE:_** You also can use your username if you don't belong to any organization. In this case, use "USER_NAME" instead of "ORG_NAME".
 
 Run the image:
 ```
