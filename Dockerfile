@@ -5,6 +5,6 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
-COPY . .
+COPY github-traffic.py /app/github-traffic.py
 
 CMD [ "python3", "github-traffic.py"]
