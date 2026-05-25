@@ -1,10 +1,8 @@
-from github import Github
+from github import Auth, Github
 from decouple import config
 from prometheus_client import start_http_server, Gauge
-from decouple import config
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
-from prometheus_client import start_http_server, Gauge
 from logfmt_logger import getLogger
 
 ORG_NAME = config("ORG_NAME", default="")
@@ -14,7 +12,7 @@ REPO_NAME_CONTAINS = config("REPO_NAME_CONTAINS", default="")
 CRONTAB_SCHEDULE = config("CRONTAB_SCHEDULE", default="0 * * * *")
 GITHUB_TOKEN = config('GITHUB_TOKEN')
 
-github = Github(GITHUB_TOKEN)
+github = Github(auth=Auth.Token(GITHUB_TOKEN))
 
 logger = getLogger("github_traffic")
 
