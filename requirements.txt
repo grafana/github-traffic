@@ -1,4 +1,4 @@
-apscheduler==3.11.2
+apscheduler==3.11.3
 requests==2.34.2
 python-decouple==3.8
 prometheus-client==0.25.0
