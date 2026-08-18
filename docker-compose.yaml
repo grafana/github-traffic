@@ -1,6 +1,6 @@
 services:
   grafana:
-    image: 'grafana/grafana-oss'
+    image: 'grafana/grafana-oss@sha256:5dad0df181cb644a14e13617b913b261a54f7d4fd4510721dba420929f35bea2'
     ports:
       - "3000:3000"
     links:
@@ -8,7 +8,7 @@ services:
     dns:
       - 8.8.8.8
   prometheus:
-    image: 'prom/prometheus'
+    image: 'prom/prometheus@sha256:5ce7540c3c00ef4ab0c9d2c995c6a5b9c421f44b4a115d97a2c7af3b1c21cbb0'
     volumes:
       - ./prometheus/:/etc/prometheus/
     command: 
@@ -18,7 +18,7 @@ services:
     links:
       - traffic
   traffic:
-    image: 'ghcr.io/grafana/github-traffic'
+    image: 'ghcr.io/grafana/github-traffic@sha256:94a9546415e019484a5d3197138148d3ffcb17842c8e852584f03a9848e6f407'
     ports: 
       - "8001:8001"
     env_file:
