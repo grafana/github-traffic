@@ -2,5 +2,5 @@ apscheduler==3.11.2
 requests==2.34.2
 python-decouple==3.8
 prometheus-client==0.25.0
-pygithub==2.9.1
+pygithub==2.10.0
 logfmt-logger==0.1.2
